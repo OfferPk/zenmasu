@@ -1,0 +1,26 @@
+{
+  "name": "zenmasu",
+  "version": "1.0.0",
+  "description": "ZenMasu - Calm Japanese Masyu pearl loop logic puzzle",
+  "scripts": {
+    "test": "node --test test/engine.test.js",
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "puzzle",
+    "logic",
+    "masyu",
+    "pearls",
+    "nikoli",
+    "zen",
+    "offline",
+    "game"
+  ],
+  "author": "OfferPk",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  }
+}
