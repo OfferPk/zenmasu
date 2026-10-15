@@ -24,6 +24,9 @@
   const levelNameEl = document.getElementById('level-name');
   const statPearlsEl = document.getElementById('stat-pearls');
   const statMovesEl = document.getElementById('stat-moves');
+  const pearlProgressEl = document.getElementById('pearl-progress');
+  const pearlProgressFillEl = document.getElementById('pearl-progress-fill');
+  const progressLabelEl = document.getElementById('progress-label');
 
   const btnSound = document.getElementById('btn-sound');
   const btnRules = document.getElementById('btn-rules');
@@ -65,7 +68,10 @@
   }
 
   function updateSoundIcon() {
-    btnSound.textContent = ZenAudio.isAudioMuted() ? '🔇' : '🔊';
+    const muted = ZenAudio.isAudioMuted();
+    btnSound.textContent = muted ? '🔇' : '🔊';
+    btnSound.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off');
+    btnSound.title = muted ? 'Turn sound on' : 'Turn sound off';
   }
 
   function loadLevel(idx) {
@@ -114,6 +120,12 @@
     }
 
     statPearlsEl.textContent = `${satisfiedPearls} / ${totalPearls}`;
+    const progressText = `${satisfiedPearls} of ${totalPearls} pearls in harmony`;
+    pearlProgressEl.setAttribute('aria-valuemax', totalPearls);
+    pearlProgressEl.setAttribute('aria-valuenow', satisfiedPearls);
+    pearlProgressEl.setAttribute('aria-valuetext', progressText);
+    pearlProgressFillEl.style.width = `${totalPearls ? (satisfiedPearls / totalPearls) * 100 : 0}%`;
+    progressLabelEl.textContent = totalPearls ? `${satisfiedPearls} of ${totalPearls} pearls in harmony` : 'No pearls on this board';
   }
 
   function renderBoard() {
@@ -365,10 +377,12 @@
     currentMode = currentMode === 'line' ? 'cross' : 'line';
     if (currentMode === 'line') {
       btnMode.className = 'btn-action btn-mode active-line';
+      btnMode.setAttribute('aria-pressed', 'true');
       modeIcon.textContent = '✏️';
       modeText.textContent = 'Draw';
     } else {
       btnMode.className = 'btn-action btn-mode active-cross';
+      btnMode.setAttribute('aria-pressed', 'false');
       modeIcon.textContent = '❌';
       modeText.textContent = 'Cross';
     }
@@ -450,7 +464,7 @@
 
     function renderTabs() {
       packTabsEl.innerHTML = packs.map(p => `
-        <button class="pack-tab ${p === currentPack ? 'active' : ''}" data-pack="${p}">
+        <button class="pack-tab ${p === currentPack ? 'active' : ''}" type="button" data-pack="${p}" aria-pressed="${p === currentPack}">
           ${p}
         </button>
       `).join('');
@@ -473,9 +487,9 @@
         if (isDone) cls += ' completed';
         if (isCurr) cls += ' current';
         return `
-          <div class="${cls}" data-id="${lvl.id}">
+          <button class="${cls}" type="button" data-id="${lvl.id}" aria-label="Level ${lvl.levelNum}${isDone ? ', completed' : ''}${isCurr ? ', current level' : ''}" aria-current="${isCurr ? 'step' : 'false'}">
             ${lvl.levelNum}
-          </div>
+          </button>
         `;
       }).join('');
 
